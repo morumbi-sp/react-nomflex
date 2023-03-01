@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { AnimatePresence, motion, Variants } from 'framer-motion';
+import { AnimatePresence, motion, useAnimation, Variants } from 'framer-motion';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -52,7 +52,14 @@ const Search = styled.span`
 const Input = styled(motion.input)`
   transform-origin: right center;
   position: absolute;
-  right: 30px;
+  right: 0px;
+  padding: 5px 10px;
+  padding-left: 45px;
+  z-index: -1;
+  color: white;
+  font-size: 16px;
+  background-color: transparent;
+  border: 1px solid ${(props) => props.theme.white.lighter};
 `;
 
 const Circle = styled(motion.span)`
@@ -86,7 +93,18 @@ function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const homeMatch = useRouteMatch('/');
   const tvMatch = useRouteMatch('/tv');
-  const toggleSearch = () => setSearchOpen((prev) => !prev);
+  const inputAnimation = useAnimation();
+  const searchAnimation = useAnimation();
+  const toggleSearch = () => {
+    if (searchOpen) {
+      inputAnimation.start({ scaleX: 0 });
+      searchAnimation.start({ x: 0 });
+    } else {
+      inputAnimation.start({ scaleX: 1 });
+      searchAnimation.start({ x: -190 });
+    }
+    setSearchOpen((prev) => !prev);
+  };
   return (
     <Nav>
       <Col>
@@ -120,7 +138,7 @@ function Header() {
       <Col>
         <Search onClick={toggleSearch}>
           <motion.svg
-            animate={{ x: searchOpen ? -180 : 0 }}
+            animate={searchAnimation}
             transition={{ type: 'linear' }}
             fill='currentColor'
             viewBox='0 0 20 20'
@@ -133,9 +151,10 @@ function Header() {
             ></path>
           </motion.svg>
           <Input
-            animate={{ scaleX: searchOpen ? 1 : 0 }}
+            animate={inputAnimation}
+            initial={{ scaleX: 0 }}
             transition={{ type: 'linear' }}
-            placeholder='search for movies or tv show'
+            placeholder='Search for movie or tv show'
           ></Input>
         </Search>
       </Col>
