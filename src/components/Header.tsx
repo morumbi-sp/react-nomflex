@@ -1,16 +1,22 @@
 import styled from 'styled-components';
-import { AnimatePresence, motion, useAnimation, Variants } from 'framer-motion';
+import {
+  motion,
+  useAnimation,
+  Variants,
+  useScroll,
+  useMotionValueEvent,
+  useTransform,
+} from 'framer-motion';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { useState } from 'react';
 
-const Nav = styled.nav`
+const Nav = styled(motion.nav)`
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: fixed;
   width: 100%;
   top: 0;
-  background-color: black;
   font-size: 14px;
   padding: 20px 60px;
   color: white;
@@ -91,6 +97,15 @@ const logoVariants: Variants = {
 
 function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
+  const { scrollY } = useScroll();
+  const navBackgroundColor = useTransform(
+    scrollY,
+    [0, 150],
+    ['rgba(0,0,0,0)', 'rgba(0,0,0,1)']
+  );
+
+  useMotionValueEvent(scrollY, 'change', () => console.log(scrollY.get()));
+
   const homeMatch = useRouteMatch('/');
   const tvMatch = useRouteMatch('/tv');
   const inputAnimation = useAnimation();
@@ -106,7 +121,7 @@ function Header() {
     setSearchOpen((prev) => !prev);
   };
   return (
-    <Nav>
+    <Nav style={{ backgroundColor: navBackgroundColor }}>
       <Col>
         <Logo
           variants={logoVariants}
