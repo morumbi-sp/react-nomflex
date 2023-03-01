@@ -4,7 +4,6 @@ import {
   useAnimation,
   Variants,
   useScroll,
-  useMotionValueEvent,
   useTransform,
 } from 'framer-motion';
 import { Link, useRouteMatch } from 'react-router-dom';
@@ -98,18 +97,18 @@ const logoVariants: Variants = {
 function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const { scrollY } = useScroll();
+
+  const homeMatch = useRouteMatch('/');
+  const tvMatch = useRouteMatch('/tv');
+  const inputAnimation = useAnimation();
+  const searchAnimation = useAnimation();
+
   const navBackgroundColor = useTransform(
     scrollY,
     [0, 150],
     ['rgba(0,0,0,0)', 'rgba(0,0,0,1)']
   );
 
-  useMotionValueEvent(scrollY, 'change', () => console.log(scrollY.get()));
-
-  const homeMatch = useRouteMatch('/');
-  const tvMatch = useRouteMatch('/tv');
-  const inputAnimation = useAnimation();
-  const searchAnimation = useAnimation();
   const toggleSearch = () => {
     if (searchOpen) {
       inputAnimation.start({ scaleX: 0 });
