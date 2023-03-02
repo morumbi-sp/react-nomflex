@@ -50,12 +50,15 @@ const Row = styled(motion.div)`
   width: 100%;
 `;
 
-const Box = styled(motion.div)`
+const Box = styled(motion.div)<{ bgPhoto: string }>`
   background-color: white;
-  height: 170px;
+  height: 145px;
   margin-bottom: 10px;
-  font-size: 60px;
-  color: tomato;
+  font-size: 22px;
+  color: black;
+  background-image: url(${(props) => props.bgPhoto});
+  background-size: cover;
+  background-position: center center;
 `;
 
 const rowVariants: Variants = {
@@ -70,7 +73,19 @@ function Home() {
     getMovies
   );
   const [index, setIndex] = useState(0);
-  const changeIndexHandler = () => setIndex((prev) => prev + 1);
+  const [leaving, setLeaving] = useState(false);
+  const backDropImgIndex = 1;
+  const offset = 6;
+
+  const increaseIndex = () => {
+    if (leaving) return;
+    toggleLeaving();
+    const totalMovies = data?.results.length ?? 0;
+    const pages = Math.floor(totalMovies / offset) - 1;
+    setIndex((prevIdx) => (prevIdx < pages ? prevIdx + 1 : 0));
+  };
+  const toggleLeaving = () => setLeaving((prev) => !prev);
+
   return (
     <Wrapper>
       {isLoading ? (
@@ -78,14 +93,14 @@ function Home() {
       ) : (
         <>
           <Banner
-            onClick={changeIndexHandler}
+            onClick={increaseIndex}
             bgPhoto={makeImagePath(data?.results[1].backdrop_path ?? '')}
           >
-            <Title>{data?.results[1].title}</Title>
-            <Overview>{data?.results[1].overview}</Overview>
+            <Title>{data?.results[backDropImgIndex].title}</Title>
+            <Overview>{data?.results[backDropImgIndex].overview}</Overview>
           </Banner>
           <Slider>
-            <AnimatePresence>
+            <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
               <Row
                 variants={rowVariants}
                 initial='hidden'
@@ -94,9 +109,15 @@ function Home() {
                 transition={{ type: 'tween', duration: 1 }}
                 key={index}
               >
-                {Array.from({ length: 6 }, (_, i) => i + 1).map((i) => (
-                  <Box key={i}>{i}</Box>
-                ))}
+                {data?.results
+                  .filter((_, idx) => idx !== backDropImgIndex)
+                  .slice(offset * index, offset * index + offset)
+                  .map((movie) => (
+                    <Box
+                      bgPhoto={makeImagePath(movie.backdrop_path, 'w400')}
+                      key={movie.id}
+                    ></Box>
+                  ))}
               </Row>
             </AnimatePresence>
           </Slider>
