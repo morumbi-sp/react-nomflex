@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { useState } from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import { getMovies, IGetMoviesResult } from '../api';
@@ -38,6 +39,7 @@ const Overview = styled.p`
 
 const Slider = styled(motion.div)`
   position: relative;
+  top: -100px;
 `;
 
 const Row = styled(motion.div)`
@@ -52,32 +54,51 @@ const Box = styled(motion.div)`
   background-color: white;
   height: 170px;
   margin-bottom: 10px;
+  font-size: 60px;
+  color: tomato;
 `;
+
+const rowVariants: Variants = {
+  hidden: { x: window.innerWidth + 10 },
+  visible: { x: 0 },
+  exit: { x: -window.innerWidth - 10 },
+};
 
 function Home() {
   const { isLoading, data } = useQuery<IGetMoviesResult>(
     ['movies', 'nowPlaying'],
     getMovies
   );
+  const [index, setIndex] = useState(0);
+  const changeIndexHandler = () => setIndex((prev) => prev + 1);
   return (
     <Wrapper>
       {isLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner bgPhoto={makeImagePath(data?.results[1].backdrop_path ?? '')}>
+          <Banner
+            onClick={changeIndexHandler}
+            bgPhoto={makeImagePath(data?.results[1].backdrop_path ?? '')}
+          >
             <Title>{data?.results[1].title}</Title>
             <Overview>{data?.results[1].overview}</Overview>
           </Banner>
           <Slider>
-            <Row>
-              <Box />
-              <Box />
-              <Box />
-              <Box />
-              <Box />
-              <Box />
-            </Row>
+            <AnimatePresence>
+              <Row
+                variants={rowVariants}
+                initial='hidden'
+                animate='visible'
+                exit='exit'
+                transition={{ type: 'tween', duration: 1 }}
+                key={index}
+              >
+                {Array.from({ length: 6 }, (_, i) => i + 1).map((i) => (
+                  <Box key={i}>{i}</Box>
+                ))}
+              </Row>
+            </AnimatePresence>
           </Slider>
         </>
       )}{' '}
