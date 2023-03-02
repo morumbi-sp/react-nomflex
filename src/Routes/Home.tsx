@@ -59,12 +59,27 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
   background-image: url(${(props) => props.bgPhoto});
   background-size: cover;
   background-position: center center;
+  &:first-child {
+    transform-origin: center left;
+  }
+  &:last-child {
+    transform-origin: center right;
+  }
 `;
 
 const rowVariants: Variants = {
   hidden: { x: window.innerWidth + 10 },
   visible: { x: 0 },
   exit: { x: -window.innerWidth - 10 },
+};
+
+const boxVariants: Variants = {
+  normal: { scale: 1 },
+  hover: {
+    scale: 1.3,
+    y: -50,
+    transition: { delay: 0.4, duration: 0.2, type: 'tween' },
+  },
 };
 
 function Home() {
@@ -116,6 +131,10 @@ function Home() {
                     <Box
                       bgPhoto={makeImagePath(movie.backdrop_path, 'w400')}
                       key={movie.id}
+                      variants={boxVariants}
+                      transition={{ type: 'tween', duration: 0.2 }}
+                      initial='normal'
+                      whileHover='hover'
                     ></Box>
                   ))}
               </Row>
