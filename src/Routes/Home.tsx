@@ -16,13 +16,13 @@ const Loader = styled.div`
   align-items: center;
 `;
 
-const Banner = styled.div<{ bgPhoto: string }>`
+const Banner = styled.div<{ bgphoto: string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
   height: 100vh;
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
-    url(${(props) => props.bgPhoto});
+    url(${(props) => props.bgphoto});
   background-size: cover;
 `;
 
@@ -50,13 +50,13 @@ const Row = styled(motion.div)`
   width: 100%;
 `;
 
-const Box = styled(motion.div)<{ bgPhoto: string }>`
+const Box = styled(motion.div)<{ bgphoto: string }>`
   background-color: white;
   height: 145px;
   margin-bottom: 10px;
   font-size: 22px;
   color: black;
-  background-image: url(${(props) => props.bgPhoto});
+  background-image: url(${(props) => props.bgphoto});
   background-size: cover;
   background-position: center center;
   &:first-child {
@@ -64,6 +64,19 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
   }
   &:last-child {
     transform-origin: center right;
+  }
+`;
+
+const Info = styled(motion.div)`
+  padding: 12px;
+  background-color: ${(props) => props.theme.black.lighter};
+  opacity: 0;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  h4 {
+    text-align: center;
+    font-size: 16px;
   }
 `;
 
@@ -78,6 +91,13 @@ const boxVariants: Variants = {
   hover: {
     scale: 1.3,
     y: -50,
+    transition: { delay: 0.4, duration: 0.2, type: 'tween' },
+  },
+};
+
+const infoVariants: Variants = {
+  hover: {
+    opacity: 1,
     transition: { delay: 0.4, duration: 0.2, type: 'tween' },
   },
 };
@@ -109,7 +129,7 @@ function Home() {
         <>
           <Banner
             onClick={increaseIndex}
-            bgPhoto={makeImagePath(data?.results[1].backdrop_path ?? '')}
+            bgphoto={makeImagePath(data?.results[1].backdrop_path ?? '')}
           >
             <Title>{data?.results[backDropImgIndex].title}</Title>
             <Overview>{data?.results[backDropImgIndex].overview}</Overview>
@@ -129,13 +149,23 @@ function Home() {
                   .slice(offset * index, offset * index + offset)
                   .map((movie) => (
                     <Box
-                      bgPhoto={makeImagePath(movie.backdrop_path, 'w400')}
+                      bgphoto={makeImagePath(
+                        movie.backdrop_path || movie.poster_path,
+                        'w400'
+                      )}
                       key={movie.id}
                       variants={boxVariants}
                       transition={{ type: 'tween', duration: 0.2 }}
                       initial='normal'
                       whileHover='hover'
-                    ></Box>
+                    >
+                      <Info
+                        variants={infoVariants}
+                        transition={{ type: 'tween', duration: 0.2 }}
+                      >
+                        <h4>{movie.title}</h4>
+                      </Info>
+                    </Box>
                   ))}
               </Row>
             </AnimatePresence>
