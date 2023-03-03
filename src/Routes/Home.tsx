@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
-import { getMovies, IGetMoviesResult } from '../api';
+import { getMovies, IGetMoviesResult, IMovie } from '../api';
 import { makeImagePath } from '../util';
 
 const Wrapper = styled.div`
@@ -71,7 +71,7 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
 
 const Info = styled(motion.div)`
   padding: 12px;
-  background-color: ${(props) => props.theme.black.lighter};
+  background-color: ${(props) => props.theme.black.darker};
   opacity: 0;
   position: absolute;
   bottom: 0;
@@ -79,6 +79,7 @@ const Info = styled(motion.div)`
   h4 {
     text-align: center;
     font-size: 16px;
+    color: ${(props) => props.theme.white.darker};
   }
 `;
 
@@ -91,7 +92,7 @@ const Overlay = styled(motion.div)`
   opacity: 0;
 `;
 
-const BigMovieBox = styled(motion.div)`
+const BigMovie = styled(motion.div)`
   position: absolute;
   width: 40vw;
   height: 80vh;
@@ -99,6 +100,34 @@ const BigMovieBox = styled(motion.div)`
   left: 0;
   right: 0;
   margin: 0 auto;
+  background-color: ${(props) => props.theme.black.darker};
+  border-radius: 15px;
+  overflow: hidden;
+`;
+
+const BigCover = styled.div<{ bgphoto: string }>`
+  width: 100%;
+  height: 400px;
+  background-size: cover;
+  background-position: center center;
+  background-image: linear-gradient(to top, black, transparent),
+    url(${(props) => props.bgphoto});
+`;
+
+const BigTitle = styled.h3`
+  color: ${(props) => props.theme.white.lighter};
+  text-align: center;
+  font-size: 50px;
+  position: relative;
+  top: -60px;
+`;
+
+const BigOverview = styled.p`
+  font-size: 15px;
+  color: ${(props) => props.theme.white.lighter};
+  padding: 30px;
+  position: relative;
+  top: -60px;
 `;
 
 const rowVariants: Variants = {
@@ -127,7 +156,7 @@ function Home() {
   const history = useHistory();
   const { scrollY } = useScroll();
   const bigMovieMatch = useRouteMatch<{ movieId: string }>('/movies/:movieId');
-  console.log(bigMovieMatch?.params.movieId);
+
   const { isLoading, data } = useQuery<IGetMoviesResult>(
     ['movies', 'nowPlaying'],
     getMovies
@@ -138,6 +167,11 @@ function Home() {
 
   const backDropImgIndex = 1;
   const offset = 6;
+  const clickedMovieId = bigMovieMatch?.params.movieId;
+  const clickedMovieData =
+    bigMovieMatch &&
+    data?.results.find((movie) => movie.id === Number(clickedMovieId));
+  console.log(clickedMovieData?.backdrop_path);
 
   const increaseIndex = () => {
     if (leaving) return;
@@ -215,12 +249,18 @@ function Home() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                 />
-                <BigMovieBox
-                  layoutId={bigMovieMatch.params.movieId}
+                <BigMovie
+                  layoutId={clickedMovieId}
                   style={{
                     top: scrollY.get() + 50,
                   }}
-                />
+                >
+                  <BigCover
+                    bgphoto={makeImagePath(clickedMovieData?.backdrop_path!)}
+                  />
+                  <BigTitle>{clickedMovieData?.title}</BigTitle>
+                  <BigOverview>{clickedMovieData?.overview}</BigOverview>
+                </BigMovie>
               </>
             ) : null}
           </AnimatePresence>

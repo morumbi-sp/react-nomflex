@@ -1,6 +1,6 @@
 export const API_KEY = '5d058213508c42de1e97cd1ebdbe63f3';
 
-interface IMovie {
+export interface IMovie {
   adult: boolean;
   backdrop_path: string;
   genre_ids: number[];
