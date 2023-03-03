@@ -21,26 +21,36 @@ const Banner = styled.div<{ bgphoto: string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 100vh;
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
     url(${(props) => props.bgphoto});
   background-size: cover;
+  background-repeat: no-repeat;
+  width: 100vw;
+  height: 0;
+  padding-bottom: 50%;
+  position: relative;
+`;
+
+const Container = styled.div`
+  position: absolute;
+  bottom: 35%;
+  margin-left: 50px;
 `;
 
 const Title = styled.h2`
-  font-size: 60px;
+  font-size: 52px;
   font-weight: 500;
   margin-bottom: 20px;
 `;
 
 const Overview = styled.p`
-  font-size: 20px;
-  width: 700px;
+  font-size: 17px;
+  width: 500px;
 `;
 
 const Slider = styled(motion.div)`
   position: relative;
-  top: -100px;
+  top: 0px;
 `;
 
 const Row = styled(motion.div)`
@@ -202,8 +212,10 @@ function Home() {
             onClick={increaseIndex}
             bgphoto={makeImagePath(data?.results[1].backdrop_path ?? '')}
           >
-            <Title>{data?.results[backDropImgIndex].title}</Title>
-            <Overview>{data?.results[backDropImgIndex].overview}</Overview>
+            <Container>
+              <Title>{data?.results[backDropImgIndex].title}</Title>
+              <Overview>{data?.results[backDropImgIndex].overview}</Overview>
+            </Container>
           </Banner>
           <Slider>
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
