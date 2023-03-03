@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
-import { getMovies, IGetMoviesResult, IMovie } from '../api';
+import { fetchNowPlayingMovie, IGetMoviesResult } from '../api';
 import { makeImagePath } from '../util';
 
 const Wrapper = styled.div`
@@ -39,7 +39,7 @@ const Container = styled.div`
 
 const Title = styled.h2`
   font-size: 52px;
-  font-weight: 500;
+  font-weight: 700;
   margin-bottom: 20px;
 `;
 
@@ -51,6 +51,15 @@ const Overview = styled.p`
 const Slider = styled(motion.div)`
   position: relative;
   top: 0px;
+  margin: 0 5px;
+`;
+
+const CategoryName = styled.div`
+  font-size: 23px;
+  font-weight: 600;
+  color: ${(props) => props.theme.white.darker};
+  margin-bottom: 10px;
+  margin-left: 15px;
 `;
 
 const Row = styled(motion.div)`
@@ -169,7 +178,7 @@ function Home() {
 
   const { isLoading, data } = useQuery<IGetMoviesResult>(
     ['movies', 'nowPlaying'],
-    getMovies
+    fetchNowPlayingMovie
   );
 
   const [index, setIndex] = useState(0);
@@ -218,6 +227,7 @@ function Home() {
             </Container>
           </Banner>
           <Slider>
+            <CategoryName>NOW PLAYING </CategoryName>
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
               <Row
                 variants={rowVariants}
