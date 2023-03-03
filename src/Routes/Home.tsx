@@ -4,6 +4,7 @@ import { useQuery } from 'react-query';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import { fetchNowPlayingMovie, IGetMoviesResult } from '../api';
+import Slider from '../components/Slider';
 import { makeImagePath } from '../util';
 
 const Wrapper = styled.div`
@@ -48,7 +49,7 @@ const Overview = styled.p`
   width: 500px;
 `;
 
-const Slider = styled(motion.div)`
+const SliderNowPlaying = styled(motion.div)`
   position: relative;
   top: 0px;
   margin: 0 5px;
@@ -209,8 +210,6 @@ function Home() {
     history.push(`/`);
   };
 
-  console.log(data);
-
   return (
     <Wrapper>
       {isLoading ? (
@@ -226,7 +225,7 @@ function Home() {
               <Overview>{data?.results[backDropImgIndex].overview}</Overview>
             </Container>
           </Banner>
-          <Slider>
+          <SliderNowPlaying>
             <CategoryName>NOW PLAYING </CategoryName>
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
               <Row
@@ -264,7 +263,8 @@ function Home() {
                   ))}
               </Row>
             </AnimatePresence>
-          </Slider>
+          </SliderNowPlaying>
+          <Slider apiData={data} />
           <AnimatePresence>
             {bigMovieMatch ? (
               <>
