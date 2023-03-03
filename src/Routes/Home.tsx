@@ -1,6 +1,7 @@
-import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { motion, AnimatePresence, Variants, useScroll } from 'framer-motion';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import { getMovies, IGetMoviesResult } from '../api';
 import { makeImagePath } from '../util';
@@ -59,6 +60,7 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   background-image: url(${(props) => props.bgphoto});
   background-size: cover;
   background-position: center center;
+  cursor: pointer;
   &:first-child {
     transform-origin: center left;
   }
@@ -78,6 +80,25 @@ const Info = styled(motion.div)`
     text-align: center;
     font-size: 16px;
   }
+`;
+
+const Overlay = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+`;
+
+const BigMovieBox = styled(motion.div)`
+  position: absolute;
+  width: 40vw;
+  height: 80vh;
+  top: scrollY.get() + 50;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
 `;
 
 const rowVariants: Variants = {
@@ -103,12 +124,18 @@ const infoVariants: Variants = {
 };
 
 function Home() {
+  const history = useHistory();
+  const { scrollY } = useScroll();
+  const bigMovieMatch = useRouteMatch<{ movieId: string }>('/movies/:movieId');
+  console.log(bigMovieMatch?.params.movieId);
   const { isLoading, data } = useQuery<IGetMoviesResult>(
     ['movies', 'nowPlaying'],
     getMovies
   );
+
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
+
   const backDropImgIndex = 1;
   const offset = 6;
 
@@ -120,6 +147,14 @@ function Home() {
     setIndex((prevIdx) => (prevIdx < pages ? prevIdx + 1 : 0));
   };
   const toggleLeaving = () => setLeaving((prev) => !prev);
+
+  const onBoxClicked = (movieId: number) => {
+    history.push(`/movies/${movieId}`);
+  };
+
+  const onOutsideClicked = () => {
+    history.push(`/`);
+  };
 
   return (
     <Wrapper>
@@ -149,11 +184,13 @@ function Home() {
                   .slice(offset * index, offset * index + offset)
                   .map((movie) => (
                     <Box
+                      onClick={() => onBoxClicked(movie.id)}
                       bgphoto={makeImagePath(
                         movie.backdrop_path || movie.poster_path,
                         'w400'
                       )}
                       key={movie.id}
+                      layoutId={movie.id.toString()}
                       variants={boxVariants}
                       transition={{ type: 'tween', duration: 0.2 }}
                       initial='normal'
@@ -170,6 +207,23 @@ function Home() {
               </Row>
             </AnimatePresence>
           </Slider>
+          <AnimatePresence>
+            {bigMovieMatch ? (
+              <>
+                <Overlay
+                  onClick={onOutsideClicked}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                />
+                <BigMovieBox
+                  layoutId={bigMovieMatch.params.movieId}
+                  style={{
+                    top: scrollY.get() + 50,
+                  }}
+                />
+              </>
+            ) : null}
+          </AnimatePresence>
         </>
       )}{' '}
     </Wrapper>
