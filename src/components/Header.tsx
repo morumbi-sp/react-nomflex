@@ -6,8 +6,13 @@ import {
   useScroll,
   useTransform,
 } from 'framer-motion';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+
+interface ISearch {
+  keyword: string;
+}
 
 const Nav = styled(motion.nav)`
   display: flex;
@@ -44,7 +49,7 @@ const Item = styled.li`
   flex-direction: column;
 `;
 
-const Search = styled.span`
+const Search = styled.form`
   color: white;
   display: flex;
   position: relative;
@@ -97,11 +102,13 @@ const logoVariants: Variants = {
 function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const { scrollY } = useScroll();
+  const { register, handleSubmit } = useForm<ISearch>();
 
   const homeMatch = useRouteMatch('/');
   const tvMatch = useRouteMatch('/tv');
   const inputAnimation = useAnimation();
   const searchAnimation = useAnimation();
+  const history = useHistory();
 
   const navBackgroundColor = useTransform(
     scrollY,
@@ -109,6 +116,9 @@ function Header() {
     ['rgba(0,0,0,0)', 'rgba(0,0,0,1)']
   );
 
+  const onValid = (data: ISearch) => {
+    history.push(`/search?keyword=${data.keyword}`);
+  };
   const toggleSearch = () => {
     if (searchOpen) {
       inputAnimation.start({ scaleX: 0 });
@@ -150,8 +160,9 @@ function Header() {
         </Items>
       </Col>
       <Col>
-        <Search onClick={toggleSearch}>
+        <Search onSubmit={handleSubmit(onValid)}>
           <motion.svg
+            onClick={toggleSearch}
             animate={searchAnimation}
             transition={{ type: 'linear' }}
             fill='currentColor'
@@ -165,6 +176,7 @@ function Header() {
             ></path>
           </motion.svg>
           <Input
+            {...register('keyword', { required: true, minLength: 2 })}
             animate={inputAnimation}
             initial={{ scaleX: 0 }}
             transition={{ type: 'linear' }}
