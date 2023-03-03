@@ -190,6 +190,8 @@ function Home() {
     history.push(`/`);
   };
 
+  console.log(data);
+
   return (
     <Wrapper>
       {isLoading ? (

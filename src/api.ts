@@ -27,7 +27,7 @@ export interface IGetMoviesResult {
 
 export const getMovies = async () => {
   const response = await fetch(
-    `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`
+    `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=ko&page=1`
   );
   const json = await response.json();
   return json;
