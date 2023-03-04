@@ -8,6 +8,7 @@ import { makeImagePath } from '../util';
 interface SliderProps {
   apiData?: IGetMoviesResult;
   categoryName: string;
+  pageName: string;
 }
 
 const SliderNowPlaying = styled(motion.div)`
@@ -114,10 +115,8 @@ const infoVariants: Variants = {
   },
 };
 
-function Slider({ apiData, categoryName }: SliderProps) {
+function Slider({ apiData, pageName, categoryName }: SliderProps) {
   const history = useHistory();
-  //   const { scrollY } = useScroll();
-  const bigMovieMatch = useRouteMatch<{ movieId: string }>('/movies/:movieId');
 
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
@@ -125,11 +124,6 @@ function Slider({ apiData, categoryName }: SliderProps) {
 
   const backDropImgIndex = 1;
   const offset = 6;
-  const clickedMovieId = bigMovieMatch?.params.movieId;
-  const clickedMovieData =
-    bigMovieMatch &&
-    apiData?.results.find((movie) => movie.id === Number(clickedMovieId));
-  console.log(clickedMovieData?.backdrop_path);
 
   const changeDirection = (event: React.MouseEvent<HTMLDivElement>) => {
     const id = event.currentTarget.id;
@@ -153,12 +147,8 @@ function Slider({ apiData, categoryName }: SliderProps) {
   const toggleLeaving = () => setLeaving((prev) => !prev);
 
   const onBoxClicked = (movieId: number) => {
-    history.push(`/movies/${movieId}`);
+    history.push(`/${pageName}/${movieId}`);
   };
-
-  //   const onOutsideClicked = () => {
-  //     history.push(`/`);
-  //   };
 
   return (
     <SliderNowPlaying variants={hoverVariants} whileHover='hover'>

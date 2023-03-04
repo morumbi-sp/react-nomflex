@@ -1,5 +1,4 @@
-import { motion, AnimatePresence, Variants, useScroll } from 'framer-motion';
-import { useState } from 'react';
+import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import { useQuery } from 'react-query';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
@@ -165,11 +164,24 @@ function Home() {
           <SliderContainer>
             <Slider
               apiData={nowPlayingMovieData}
+              pageName={'movies'}
               categoryName={'now playing'}
             />
-            <Slider apiData={topLatedMovieData} categoryName={'top late'} />
-            <Slider apiData={popularMovieData} categoryName={'popular'} />
-            <Slider apiData={upcomingMovieData} categoryName={'upcoming'} />
+            <Slider
+              apiData={topLatedMovieData}
+              pageName={'movies'}
+              categoryName={'top late'}
+            />
+            <Slider
+              apiData={popularMovieData}
+              pageName={'movies'}
+              categoryName={'popular'}
+            />
+            <Slider
+              apiData={upcomingMovieData}
+              pageName={'movies'}
+              categoryName={'upcoming'}
+            />
           </SliderContainer>
 
           <AnimatePresence>
