@@ -1,6 +1,6 @@
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useState } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { IGetMoviesResult } from '../api';
 import { makeImagePath } from '../util';

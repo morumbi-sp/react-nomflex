@@ -58,9 +58,23 @@ export const fetchUpcomingMovie = async () => {
   return json;
 };
 
-export const fetchTopLateTv = async () => {
+export const fetchTopRatedTv = async () => {
   const response = await fetch(
     `${BASE_MOVIE_URL}/tv/top_rated?api_key=${API_KEY}&language=ko&page=1`
+  );
+  const json = await response.json();
+  return json;
+};
+export const fetchAiringTodayTv = async () => {
+  const response = await fetch(
+    `${BASE_MOVIE_URL}/tv/airing_today?api_key=${API_KEY}&language=ko&page=1`
+  );
+  const json = await response.json();
+  return json;
+};
+export const fetchPopularTv = async () => {
+  const response = await fetch(
+    `${BASE_MOVIE_URL}/tv/popular?api_key=${API_KEY}&language=ko&page=1`
   );
   const json = await response.json();
   return json;

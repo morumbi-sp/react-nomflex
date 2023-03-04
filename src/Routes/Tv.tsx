@@ -2,7 +2,12 @@ import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import { useQuery } from 'react-query';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
-import { fetchTopLateTv, IGetMoviesResult } from '../api';
+import {
+  fetchAiringTodayTv,
+  fetchPopularTv,
+  fetchTopRatedTv,
+  IGetMoviesResult,
+} from '../api';
 import Slider from '../components/Slider';
 import { makeImagePath } from '../util';
 
@@ -106,7 +111,11 @@ function Tv() {
   const bigMovieMatch = useRouteMatch<{ movieId: string }>('/tv/tvs/:tvId');
 
   const { isLoading: topLateTvLoading, data: topLateTvData } =
-    useQuery<IGetMoviesResult>(['tvs', 'topLate'], fetchTopLateTv);
+    useQuery<IGetMoviesResult>(['tvs', 'topLate'], fetchTopRatedTv);
+  const { isLoading: airingTodayTvLoading, data: airingTodayTvData } =
+    useQuery<IGetMoviesResult>(['tvs', 'airingToday'], fetchAiringTodayTv);
+  const { isLoading: popularTvLoading, data: popularTvData } =
+    useQuery<IGetMoviesResult>(['tvs', 'popular'], fetchPopularTv);
 
   const backDropImgIndex = 0;
   const clickedMovieId = bigMovieMatch?.params.movieId;
@@ -114,7 +123,7 @@ function Tv() {
     bigMovieMatch &&
     topLateTvData?.results.find((movie) => movie.id === Number(clickedMovieId));
 
-  const loading = topLateTvLoading;
+  const loading = topLateTvLoading || airingTodayTvLoading || popularTvLoading;
 
   const onOutsideClicked = () => {
     history.push(`/tv`);
@@ -142,7 +151,17 @@ function Tv() {
             <Slider
               apiData={topLateTvData}
               pageName={'tv/tvs'}
-              categoryName={'now playing'}
+              categoryName={'top rated'}
+            />
+            <Slider
+              apiData={airingTodayTvData}
+              pageName={'tv/tvs'}
+              categoryName={'airing today'}
+            />
+            <Slider
+              apiData={popularTvData}
+              pageName={'tv/tvs'}
+              categoryName={'popular'}
             />
           </SliderContainer>
 
