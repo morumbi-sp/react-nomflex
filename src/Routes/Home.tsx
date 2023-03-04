@@ -7,6 +7,7 @@ import {
   fetchNowPlayingMovie,
   fetchPopularMovie,
   fetchTopLatedMovie,
+  fetchUpcomingMovie,
   IGetMoviesResult,
 } from '../api';
 import Slider from '../components/Slider';
@@ -120,6 +121,9 @@ function Home() {
   const { isLoading: popularMovieLoading, data: popularMovieData } =
     useQuery<IGetMoviesResult>(['movies', 'popular'], fetchPopularMovie);
 
+  const { isLoading: upcomingMovieLoading, data: upcomingMovieData } =
+    useQuery<IGetMoviesResult>(['movies', 'upcoming'], fetchUpcomingMovie);
+
   const backDropImgIndex = 1;
   const clickedMovieId = bigMovieMatch?.params.movieId;
   const clickedMovieData =
@@ -129,7 +133,10 @@ function Home() {
     );
 
   const loading =
-    nowPlayingMovieLoading || topLatedMovieLoading || popularMovieLoading;
+    nowPlayingMovieLoading ||
+    topLatedMovieLoading ||
+    popularMovieLoading ||
+    upcomingMovieLoading;
 
   const onOutsideClicked = () => {
     history.push(`/`);
@@ -162,6 +169,7 @@ function Home() {
             />
             <Slider apiData={topLatedMovieData} categoryName={'top late'} />
             <Slider apiData={popularMovieData} categoryName={'popular'} />
+            <Slider apiData={upcomingMovieData} categoryName={'upcoming'} />
           </SliderContainer>
 
           <AnimatePresence>

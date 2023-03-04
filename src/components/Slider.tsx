@@ -30,14 +30,15 @@ const NextBtn = styled(motion.div)`
   width: 30px;
   top: 30;
   right: 0;
-  background-color: rgba(0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.6);
+  opacity: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
   svg {
     height: 30px;
-    fill: white;
+    fill: rgba(255, 255, 255, 1);
   }
 `;
 const PrevBtn = styled(NextBtn)`
@@ -87,7 +88,7 @@ const Info = styled(motion.div)`
 
 const hoverVariants: Variants = {
   hover: {
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    opacity: 1,
   },
 };
 
@@ -168,9 +169,13 @@ function Slider({ apiData, categoryName }: SliderProps) {
         onClick={increaseIndex}
         onMouseEnter={changeDirection}
       >
-        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 512'>
+        <motion.svg
+          variants={hoverVariants}
+          xmlns='http://www.w3.org/2000/svg'
+          viewBox='0 0 256 512'
+        >
           <path d='M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z' />
-        </svg>
+        </motion.svg>
       </NextBtn>
       <PrevBtn
         id='prev'
@@ -178,9 +183,13 @@ function Slider({ apiData, categoryName }: SliderProps) {
         onClick={increaseIndex}
         onMouseEnter={changeDirection}
       >
-        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 512'>
+        <motion.svg
+          variants={hoverVariants}
+          xmlns='http://www.w3.org/2000/svg'
+          viewBox='0 0 256 512'
+        >
           <path d='M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z' />
-        </svg>
+        </motion.svg>
       </PrevBtn>
 
       <AnimatePresence initial={false} onExitComplete={toggleLeaving}>

@@ -49,3 +49,10 @@ export const fetchPopularMovie = async () => {
   const json = await response.json();
   return json;
 };
+export const fetchUpcomingMovie = async () => {
+  const response = await fetch(
+    `${BASE_MOVIE_URL}/upcoming?api_key=${API_KEY}&language=ko&page=1`
+  );
+  const json = await response.json();
+  return json;
+};
