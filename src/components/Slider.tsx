@@ -5,7 +5,7 @@ interface SliderProps {
 }
 
 function Slider({ apiData }: SliderProps) {
-  return <div>hi</div>;
+  return <div style={{ fontSize: '200px' }}>hi</div>;
 }
 
 export default Slider;

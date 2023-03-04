@@ -49,6 +49,11 @@ const Overview = styled.p`
   width: 500px;
 `;
 
+const SliderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 const SliderNowPlaying = styled(motion.div)`
   position: relative;
   top: 0px;
@@ -78,21 +83,8 @@ const NextBtn = styled(motion.div)`
     fill: white;
   }
 `;
-const PrevBtn = styled(motion.div)`
-  z-index: 99;
-  height: 145px;
-  width: 30px;
-  top: 30;
+const PrevBtn = styled(NextBtn)`
   left: 0;
-  background-color: rgba(0, 0, 0, 0);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  svg {
-    height: 30px;
-    fill: white;
-  }
 `;
 
 const Row = styled(motion.div)`
@@ -274,67 +266,70 @@ function Home() {
               <Overview>{data?.results[backDropImgIndex].overview}</Overview>
             </Container>
           </Banner>
-          <SliderNowPlaying variants={hoverVariants} whileHover='hover'>
-            <CategoryName>NOW PLAYING </CategoryName>
-            <NextBtn
-              id='next'
-              variants={hoverVariants}
-              onClick={increaseIndex}
-              onMouseEnter={changeDirection}
-            >
-              <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 512'>
-                <path d='M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z' />
-              </svg>
-            </NextBtn>
-            <PrevBtn
-              id='prev'
-              variants={hoverVariants}
-              onClick={increaseIndex}
-              onMouseEnter={changeDirection}
-            >
-              <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 512'>
-                <path d='M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z' />
-              </svg>
-            </PrevBtn>
-
-            <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
-              <Row
-                variants={rowVariants}
-                initial={isRevers ? 'exit' : 'hidden'}
-                animate='visible'
-                exit={isRevers ? 'hidden' : 'exit'}
-                transition={{ type: 'tween', duration: 1 }}
-                key={index}
+          <SliderContainer>
+            <SliderNowPlaying variants={hoverVariants} whileHover='hover'>
+              <CategoryName>NOW PLAYING </CategoryName>
+              <NextBtn
+                id='next'
+                variants={hoverVariants}
+                onClick={increaseIndex}
+                onMouseEnter={changeDirection}
               >
-                {data?.results
-                  .filter((_, idx) => idx !== backDropImgIndex)
-                  .slice(offset * index, offset * index + offset)
-                  .map((movie) => (
-                    <Box
-                      onClick={() => onBoxClicked(movie.id)}
-                      bgphoto={makeImagePath(
-                        movie.backdrop_path || movie.poster_path,
-                        'w400'
-                      )}
-                      key={movie.id}
-                      layoutId={movie.id.toString()}
-                      variants={boxVariants}
-                      transition={{ type: 'tween', duration: 0.2 }}
-                      initial='normal'
-                      whileHover='hover'
-                    >
-                      <Info
-                        variants={infoVariants}
+                <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 512'>
+                  <path d='M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z' />
+                </svg>
+              </NextBtn>
+              <PrevBtn
+                id='prev'
+                variants={hoverVariants}
+                onClick={increaseIndex}
+                onMouseEnter={changeDirection}
+              >
+                <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 512'>
+                  <path d='M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z' />
+                </svg>
+              </PrevBtn>
+
+              <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
+                <Row
+                  variants={rowVariants}
+                  initial={isRevers ? 'exit' : 'hidden'}
+                  animate='visible'
+                  exit={isRevers ? 'hidden' : 'exit'}
+                  transition={{ type: 'tween', duration: 1 }}
+                  key={index}
+                >
+                  {data?.results
+                    .filter((_, idx) => idx !== backDropImgIndex)
+                    .slice(offset * index, offset * index + offset)
+                    .map((movie) => (
+                      <Box
+                        onClick={() => onBoxClicked(movie.id)}
+                        bgphoto={makeImagePath(
+                          movie.backdrop_path || movie.poster_path,
+                          'w400'
+                        )}
+                        key={movie.id}
+                        layoutId={movie.id.toString()}
+                        variants={boxVariants}
                         transition={{ type: 'tween', duration: 0.2 }}
+                        initial='normal'
+                        whileHover='hover'
                       >
-                        <h4>{movie.title}</h4>
-                      </Info>
-                    </Box>
-                  ))}
-              </Row>
-            </AnimatePresence>
-          </SliderNowPlaying>
-          <Slider apiData={data} />
+                        <Info
+                          variants={infoVariants}
+                          transition={{ type: 'tween', duration: 0.2 }}
+                        >
+                          <h4>{movie.title}</h4>
+                        </Info>
+                      </Box>
+                    ))}
+                </Row>
+              </AnimatePresence>
+            </SliderNowPlaying>
+            <Slider apiData={data} />
+          </SliderContainer>
+
           <AnimatePresence>
             {bigMovieMatch ? (
               <>
