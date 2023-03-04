@@ -212,7 +212,7 @@ function Slider({ apiData, pageName, categoryName }: SliderProps) {
                   variants={infoVariants}
                   transition={{ type: 'tween', duration: 0.2 }}
                 >
-                  <h4>{movie.title}</h4>
+                  <h4>{movie.title || movie.name}</h4>
                 </Info>
               </Box>
             ))}

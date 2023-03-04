@@ -12,6 +12,7 @@ export interface IMovie {
   poster_path: string;
   release_date: string;
   title: string;
+  name: string;
   video: boolean;
   vote_average: number;
   vote_count: number;
@@ -56,6 +57,7 @@ export const fetchUpcomingMovie = async () => {
   const json = await response.json();
   return json;
 };
+
 export const fetchTopLateTv = async () => {
   const response = await fetch(
     `${BASE_MOVIE_URL}/tv/top_rated?api_key=${API_KEY}&language=ko&page=1`
