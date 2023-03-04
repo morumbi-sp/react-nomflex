@@ -52,11 +52,12 @@ const Overview = styled.p`
 const SliderContainer = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
 `;
 
 const SliderNowPlaying = styled(motion.div)`
-  position: relative;
-  top: 0px;
+  /* position: relative;
+  top: 0px; */
 `;
 
 const CategoryName = styled.div`
@@ -91,7 +92,7 @@ const Row = styled(motion.div)`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 10px;
-  position: absolute;
+  /* position: absolute; */
   width: 100%;
   padding: 0 5px;
 `;
