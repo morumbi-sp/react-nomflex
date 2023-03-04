@@ -15,6 +15,7 @@ interface ISearch {
 }
 
 const Nav = styled(motion.nav)`
+  z-index: 99;
   display: flex;
   justify-content: space-between;
   align-items: center;
