@@ -176,7 +176,7 @@ const BigOverview = styled.p`
   top: -60px;
 `;
 
-const hoverVariants = {
+const hoverVariants: Variants = {
   hover: {
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
