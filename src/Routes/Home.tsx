@@ -5,6 +5,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   fetchNowPlayingMovie,
+  fetchPopularMovie,
   fetchTopLatedMovie,
   IGetMoviesResult,
 } from '../api';
@@ -116,6 +117,9 @@ function Home() {
   const { isLoading: topLatedMovieLoading, data: topLatedMovieData } =
     useQuery<IGetMoviesResult>(['movies', 'topLated'], fetchTopLatedMovie);
 
+  const { isLoading: popularMovieLoading, data: popularMovieData } =
+    useQuery<IGetMoviesResult>(['movies', 'popular'], fetchPopularMovie);
+
   const backDropImgIndex = 1;
   const clickedMovieId = bigMovieMatch?.params.movieId;
   const clickedMovieData =
@@ -124,7 +128,8 @@ function Home() {
       (movie) => movie.id === Number(clickedMovieId)
     );
 
-  const loading = nowPlayingMovieLoading || topLatedMovieLoading;
+  const loading =
+    nowPlayingMovieLoading || topLatedMovieLoading || popularMovieLoading;
 
   const onOutsideClicked = () => {
     history.push(`/`);
@@ -156,6 +161,7 @@ function Home() {
               categoryName={'now playing'}
             />
             <Slider apiData={topLatedMovieData} categoryName={'top late'} />
+            <Slider apiData={popularMovieData} categoryName={'popular'} />
           </SliderContainer>
 
           <AnimatePresence>

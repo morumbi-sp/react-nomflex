@@ -202,8 +202,8 @@ function Slider({ apiData, categoryName }: SliderProps) {
                   movie.backdrop_path || movie.poster_path,
                   'w400'
                 )}
-                key={movie.id}
-                layoutId={movie.id.toString()}
+                key={categoryName + movie.id}
+                layoutId={categoryName + movie.id.toString()}
                 variants={boxVariants}
                 transition={{ type: 'tween', duration: 0.2 }}
                 initial='normal'

@@ -25,9 +25,11 @@ export interface IGetMoviesResult {
   total_results: number;
 }
 
+const BASE_MOVIE_URL = 'https://api.themoviedb.org/3/movie';
+
 export const fetchNowPlayingMovie = async () => {
   const response = await fetch(
-    `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=ko&page=1`
+    `${BASE_MOVIE_URL}/now_playing?api_key=${API_KEY}&language=ko&page=1`
   );
   const json = await response.json();
   return json;
@@ -35,7 +37,14 @@ export const fetchNowPlayingMovie = async () => {
 
 export const fetchTopLatedMovie = async () => {
   const response = await fetch(
-    `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}&language=ko&page=1`
+    `${BASE_MOVIE_URL}/top_rated?api_key=${API_KEY}&language=ko&page=1`
+  );
+  const json = await response.json();
+  return json;
+};
+export const fetchPopularMovie = async () => {
+  const response = await fetch(
+    `${BASE_MOVIE_URL}/popular?api_key=${API_KEY}&language=ko&page=1`
   );
   const json = await response.json();
   return json;
