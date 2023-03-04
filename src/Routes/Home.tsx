@@ -52,7 +52,6 @@ const Overview = styled.p`
 const SliderContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
 `;
 
 const Overlay = styled(motion.div)`
@@ -136,7 +135,8 @@ function Home() {
             </Container>
           </Banner>
           <SliderContainer>
-            <Slider apiData={data} />
+            <Slider apiData={data} categoryName={'now playing'} />
+            <Slider apiData={data} categoryName={'now playing'} />
           </SliderContainer>
 
           <AnimatePresence>

@@ -7,15 +7,17 @@ import { makeImagePath } from '../util';
 
 interface SliderProps {
   apiData?: IGetMoviesResult;
+  categoryName: string;
 }
 
 const SliderNowPlaying = styled(motion.div)`
-  /* position: relative;
-  top: 0px; */
+  position: relative;
+  height: 220px;
 `;
 
 const CategoryName = styled.div`
   font-size: 23px;
+  text-transform: uppercase;
   font-weight: 600;
   color: ${(props) => props.theme.white.darker};
   margin-bottom: 10px;
@@ -46,7 +48,7 @@ const Row = styled(motion.div)`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 10px;
-  /* position: absolute; */
+  position: absolute;
   width: 100%;
   padding: 0 5px;
 `;
@@ -111,7 +113,7 @@ const infoVariants: Variants = {
   },
 };
 
-function Slider({ apiData }: SliderProps) {
+function Slider({ apiData, categoryName }: SliderProps) {
   const history = useHistory();
   //   const { scrollY } = useScroll();
   const bigMovieMatch = useRouteMatch<{ movieId: string }>('/movies/:movieId');
@@ -159,7 +161,7 @@ function Slider({ apiData }: SliderProps) {
 
   return (
     <SliderNowPlaying variants={hoverVariants} whileHover='hover'>
-      <CategoryName>NOW PLAYING </CategoryName>
+      <CategoryName>{categoryName}</CategoryName>
       <NextBtn
         id='next'
         variants={hoverVariants}
