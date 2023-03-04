@@ -5,7 +5,6 @@ interface SliderProps {
 }
 
 function Slider({ apiData }: SliderProps) {
-  console.log(apiData);
   return <div>hi</div>;
 }
 

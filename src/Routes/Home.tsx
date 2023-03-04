@@ -52,7 +52,6 @@ const Overview = styled.p`
 const SliderNowPlaying = styled(motion.div)`
   position: relative;
   top: 0px;
-  margin: 0 5px;
 `;
 
 const CategoryName = styled.div`
@@ -63,12 +62,46 @@ const CategoryName = styled.div`
   margin-left: 15px;
 `;
 
+const NextBtn = styled(motion.div)`
+  z-index: 99;
+  height: 145px;
+  width: 30px;
+  top: 30;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  svg {
+    height: 30px;
+    fill: white;
+  }
+`;
+const PrevBtn = styled(motion.div)`
+  z-index: 99;
+  height: 145px;
+  width: 30px;
+  top: 30;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  svg {
+    height: 30px;
+    fill: white;
+  }
+`;
+
 const Row = styled(motion.div)`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 10px;
   position: absolute;
   width: 100%;
+  padding: 0 5px;
 `;
 
 const Box = styled(motion.div)<{ bgphoto: string }>`
@@ -82,10 +115,10 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   background-position: center center;
   cursor: pointer;
   &:first-child {
-    transform-origin: center left;
+    transform-origin: -43% center;
   }
   &:last-child {
-    transform-origin: center right;
+    transform-origin: 143% center;
   }
 `;
 
@@ -150,6 +183,12 @@ const BigOverview = styled.p`
   top: -60px;
 `;
 
+const hoverVariants = {
+  hover: {
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+};
+
 const rowVariants: Variants = {
   hidden: { x: window.innerWidth + 10 },
   visible: { x: 0 },
@@ -184,6 +223,7 @@ function Home() {
 
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
+  const [isRevers, setIsRevers] = useState(false);
 
   const backDropImgIndex = 1;
   const offset = 6;
@@ -193,12 +233,24 @@ function Home() {
     data?.results.find((movie) => movie.id === Number(clickedMovieId));
   console.log(clickedMovieData?.backdrop_path);
 
-  const increaseIndex = () => {
+  const changeDirection = (event: React.MouseEvent<HTMLDivElement>) => {
+    const id = event.currentTarget.id;
+    setIsRevers(id === 'next' ? false : true);
+  };
+
+  const increaseIndex = (event: React.MouseEvent<HTMLDivElement>) => {
     if (leaving) return;
     toggleLeaving();
     const totalMovies = data?.results.length ?? 0;
     const pages = Math.floor(totalMovies / offset) - 1;
-    setIndex((prevIdx) => (prevIdx < pages ? prevIdx + 1 : 0));
+    const id = event.currentTarget.id;
+    setIndex((prevIdx) => {
+      if (id === 'next') {
+        return prevIdx < pages ? prevIdx + 1 : 0;
+      } else if (id === 'prev') {
+        return prevIdx > 0 ? prevIdx - 1 : pages;
+      } else return 0;
+    });
   };
   const toggleLeaving = () => setLeaving((prev) => !prev);
 
@@ -216,23 +268,41 @@ function Home() {
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner
-            onClick={increaseIndex}
-            bgphoto={makeImagePath(data?.results[1].backdrop_path ?? '')}
-          >
+          <Banner bgphoto={makeImagePath(data?.results[1].backdrop_path ?? '')}>
             <Container>
               <Title>{data?.results[backDropImgIndex].title}</Title>
               <Overview>{data?.results[backDropImgIndex].overview}</Overview>
             </Container>
           </Banner>
-          <SliderNowPlaying>
+          <SliderNowPlaying variants={hoverVariants} whileHover='hover'>
             <CategoryName>NOW PLAYING </CategoryName>
+            <NextBtn
+              id='next'
+              variants={hoverVariants}
+              onClick={increaseIndex}
+              onMouseEnter={changeDirection}
+            >
+              <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 512'>
+                <path d='M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z' />
+              </svg>
+            </NextBtn>
+            <PrevBtn
+              id='prev'
+              variants={hoverVariants}
+              onClick={increaseIndex}
+              onMouseEnter={changeDirection}
+            >
+              <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 512'>
+                <path d='M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z' />
+              </svg>
+            </PrevBtn>
+
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
               <Row
                 variants={rowVariants}
-                initial='hidden'
+                initial={isRevers ? 'exit' : 'hidden'}
                 animate='visible'
-                exit='exit'
+                exit={isRevers ? 'hidden' : 'exit'}
                 transition={{ type: 'tween', duration: 1 }}
                 key={index}
               >
