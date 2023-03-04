@@ -3,7 +3,11 @@ import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
-import { fetchNowPlayingMovie, IGetMoviesResult } from '../api';
+import {
+  fetchNowPlayingMovie,
+  fetchTopLatedMovie,
+  IGetMoviesResult,
+} from '../api';
 import Slider from '../components/Slider';
 import { makeImagePath } from '../util';
 
@@ -106,17 +110,21 @@ function Home() {
   const { scrollY } = useScroll();
   const bigMovieMatch = useRouteMatch<{ movieId: string }>('/movies/:movieId');
 
-  const { isLoading, data } = useQuery<IGetMoviesResult>(
-    ['movies', 'nowPlaying'],
-    fetchNowPlayingMovie
-  );
+  const { isLoading: nowPlayingMovieLoading, data: nowPlayingMovieData } =
+    useQuery<IGetMoviesResult>(['movies', 'nowPlaying'], fetchNowPlayingMovie);
+
+  const { isLoading: topLatedMovieLoading, data: topLatedMovieData } =
+    useQuery<IGetMoviesResult>(['movies', 'topLated'], fetchTopLatedMovie);
 
   const backDropImgIndex = 1;
   const clickedMovieId = bigMovieMatch?.params.movieId;
   const clickedMovieData =
     bigMovieMatch &&
-    data?.results.find((movie) => movie.id === Number(clickedMovieId));
-  console.log(clickedMovieData?.backdrop_path);
+    nowPlayingMovieData?.results.find(
+      (movie) => movie.id === Number(clickedMovieId)
+    );
+
+  const loading = nowPlayingMovieLoading || topLatedMovieLoading;
 
   const onOutsideClicked = () => {
     history.push(`/`);
@@ -124,19 +132,30 @@ function Home() {
 
   return (
     <Wrapper>
-      {isLoading ? (
+      {loading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner bgphoto={makeImagePath(data?.results[1].backdrop_path ?? '')}>
+          <Banner
+            bgphoto={makeImagePath(
+              nowPlayingMovieData?.results[1].backdrop_path ?? ''
+            )}
+          >
             <Container>
-              <Title>{data?.results[backDropImgIndex].title}</Title>
-              <Overview>{data?.results[backDropImgIndex].overview}</Overview>
+              <Title>
+                {nowPlayingMovieData?.results[backDropImgIndex].title}
+              </Title>
+              <Overview>
+                {nowPlayingMovieData?.results[backDropImgIndex].overview}
+              </Overview>
             </Container>
           </Banner>
           <SliderContainer>
-            <Slider apiData={data} categoryName={'now playing'} />
-            <Slider apiData={data} categoryName={'now playing'} />
+            <Slider
+              apiData={nowPlayingMovieData}
+              categoryName={'now playing'}
+            />
+            <Slider apiData={topLatedMovieData} categoryName={'top late'} />
           </SliderContainer>
 
           <AnimatePresence>
