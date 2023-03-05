@@ -57,15 +57,12 @@ const Row = styled(motion.div)`
   padding: 0 5px;
 `;
 
-const Box = styled(motion.div)<{ bgphoto: string }>`
+const Box = styled(motion.div)`
   background-color: white;
-  height: 145px;
   margin-bottom: 10px;
   font-size: 22px;
   color: black;
-  background-image: url(${(props) => props.bgphoto});
-  background-size: cover;
-  background-position: center center;
+
   cursor: pointer;
   &:first-child {
     transform-origin: -43% center;
@@ -75,12 +72,18 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   }
 `;
 
+const BoxImg = styled(motion.div)<{ bgphoto: string }>`
+  background-image: url(${(props) => props.bgphoto});
+  height: 145px;
+  background-size: cover;
+  background-position: center center;
+`;
+
 const Info = styled(motion.div)`
-  padding: 12px;
+  padding: 10px;
   background-color: ${(props) => props.theme.black.darker};
   opacity: 0;
   position: absolute;
-  bottom: 0;
   width: 100%;
   h4 {
     text-align: center;
@@ -202,10 +205,6 @@ function Slider({ apiData, pageName, categoryName }: SliderProps) {
             .map((movie) => (
               <Box
                 onClick={() => onBoxClicked(movie.id)}
-                bgphoto={makeImagePath(
-                  movie.backdrop_path || movie.poster_path,
-                  'w400'
-                )}
                 key={categoryName + movie.id}
                 layoutId={categoryName + movie.id.toString()}
                 variants={boxVariants}
@@ -213,6 +212,12 @@ function Slider({ apiData, pageName, categoryName }: SliderProps) {
                 initial='normal'
                 whileHover='hover'
               >
+                <BoxImg
+                  bgphoto={makeImagePath(
+                    movie.backdrop_path || movie.poster_path,
+                    'w400'
+                  )}
+                ></BoxImg>
                 <Info
                   variants={infoVariants}
                   transition={{ type: 'tween', duration: 0.2 }}

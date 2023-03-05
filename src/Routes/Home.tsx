@@ -217,7 +217,7 @@ function Home() {
             ) : null}
           </AnimatePresence>
         </>
-      )}{' '}
+      )}
     </Wrapper>
   );
 }

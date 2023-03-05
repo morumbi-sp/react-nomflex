@@ -1,6 +1,7 @@
 import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import { useQuery } from 'react-query';
 import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import {
   fetchAiringTodayTv,
@@ -8,6 +9,7 @@ import {
   fetchTopRatedTv,
   IGetMoviesResult,
 } from '../api';
+import { category } from '../atoms';
 import Slider from '../components/Slider';
 import { makeImagePath } from '../util';
 
@@ -108,6 +110,9 @@ const BigOverview = styled.p`
 function Tv() {
   const history = useHistory();
   const { scrollY } = useScroll();
+
+  const categoryValue = useRecoilValue(category);
+
   const bigMovieMatch = useRouteMatch<{ tvId: string }>('/tv/tvs/:tvId');
 
   const { isLoading: topLateTvLoading, data: topLateTvData } =
@@ -180,7 +185,7 @@ function Tv() {
                   exit={{ opacity: 0 }}
                 />
                 <BigMovie
-                  layoutId={clickedMovieId}
+                  layoutId={categoryValue + clickedMovieId}
                   style={{
                     top: scrollY.get() + 50,
                   }}
