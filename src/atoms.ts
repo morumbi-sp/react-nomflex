@@ -35,3 +35,8 @@ export const allApiDataMovie = atom<IMovie[]>({
   key: 'allMovie',
   default: [],
 });
+
+export const allApiDataTv = atom<IMovie[]>({
+  key: 'allTv',
+  default: [],
+});

@@ -2,11 +2,12 @@ import { motion } from 'framer-motion';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
-import { allApiDataMovie, category } from '../atoms';
+import { allApiDataMovie, allApiDataTv, category } from '../atoms';
 import { makeImagePath } from '../util';
 
 interface PropsI {
   scrollY: number;
+  page?: string;
 }
 
 const Overlay = styled(motion.div)`
@@ -56,13 +57,21 @@ const BigOverview = styled.p`
   top: -60px;
 `;
 
-function BigBox({ scrollY }: PropsI) {
+function BigBox({ scrollY, page }: PropsI) {
   const history = useHistory();
-  //   const { scrollY } = useScroll();
   const categoryValue = useRecoilValue(category);
-  const bigMovieMatch = useRouteMatch<{ movieId: string }>('/movies/:movieId');
-  const allData = useRecoilValue(allApiDataMovie);
-  console.log(scrollY);
+
+  const matchPage =
+    (page === 'movie' && '/movies/:movieId') ||
+    (page === 'tv' && '/tv/tvs/:movieId') ||
+    '';
+  const bigMovieMatch = useRouteMatch<{ movieId: string }>(matchPage);
+  console.log(bigMovieMatch);
+  const allMovieData = useRecoilValue(allApiDataMovie);
+  const allTvData = useRecoilValue(allApiDataTv);
+
+  const allData =
+    (page === 'movie' && allMovieData) || (page === 'tv' && allTvData) || [];
 
   const clickedMovieId = bigMovieMatch?.params.movieId;
   const clickedMovieData =
@@ -70,7 +79,17 @@ function BigBox({ scrollY }: PropsI) {
     allData?.find((movie) => movie.id === Number(clickedMovieId));
 
   const onOutsideClicked = () => {
-    history.push(`/`);
+    const pageName =
+      (page === 'movie' && '/') || (page === 'tv' && '/tv') || '/';
+    history.push(pageName);
+  };
+
+  const getYear = (date: string) => {
+    if (date) {
+      return date.split('-')[0];
+    } else {
+      return '';
+    }
   };
 
   return (
@@ -87,7 +106,7 @@ function BigBox({ scrollY }: PropsI) {
         }}
       >
         <BigCover bgphoto={makeImagePath(clickedMovieData?.backdrop_path!)} />
-        <BigTitle>{clickedMovieData?.title}</BigTitle>
+        <BigTitle>{clickedMovieData?.title || clickedMovieData?.name}</BigTitle>
         <BigOverview>{clickedMovieData?.overview}</BigOverview>
       </BigMovie>
     </>

@@ -1,6 +1,6 @@
 import { AnimatePresence, useScroll } from 'framer-motion';
 import { useQuery } from 'react-query';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import {
@@ -142,7 +142,9 @@ function Home() {
           </SliderContainer>
 
           <AnimatePresence>
-            {bigMovieMatch ? <BigBox scrollY={scrollYGet} /> : null}
+            {bigMovieMatch ? (
+              <BigBox page={'movie'} scrollY={scrollYGet} />
+            ) : null}
           </AnimatePresence>
         </>
       )}
