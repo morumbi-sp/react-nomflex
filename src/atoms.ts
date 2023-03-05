@@ -1,4 +1,5 @@
 import { atom, selector } from 'recoil';
+import { IMovie } from './api';
 
 export const windowWidth = atom({
   key: 'windowWidth',
@@ -28,4 +29,9 @@ export const slideCnt = selector({
 export const category = atom({
   key: 'category',
   default: '',
+});
+
+export const allApiDataMovie = atom<IMovie[]>({
+  key: 'allMovie',
+  default: [],
 });
