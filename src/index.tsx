@@ -90,22 +90,3 @@ root.render(
     </RecoilRoot>
   </React.StrictMode>
 );
-
-/* 
-1. fix thumbnail zoom
-  - gray bottom panel need to be outside of the img
-  - need information (refer coupang play)
-  - set button for slide page
-
-2. fix bigMovieBox
-  - need poster
-  - need information (refer https://myhappyman.github.io/shinflix/home/nowPlaying/631842 )
-
-3. search
-  - build result page
-  - set search function
-
-4. populate categories
-
-
-*/
