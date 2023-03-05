@@ -1,4 +1,5 @@
 import { AnimatePresence, motion, Variants } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useLocation } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -88,16 +89,26 @@ function Search() {
   const offset = useRecoilValue(slideCnt);
   const { search } = useLocation();
   const keyword = new URLSearchParams(search).get('keyword');
-  console.log(keyword);
 
-  const { isLoading: movieLoading, data: movieData } =
-    useQuery<IGetMoviesResult>(['movies', 'searchResults'], () =>
-      keyword ? fetchSearchMovies(keyword) : Promise.resolve(null)
-    );
-  const { isLoading: tvLoading, data: tvData } = useQuery<IGetMoviesResult>(
-    ['tvs', 'searchResults'],
-    () => (keyword ? fetchSearchTvs(keyword) : Promise.resolve(null))
+  const {
+    isLoading: movieLoading,
+    data: movieData,
+    refetch: refetchMovies,
+  } = useQuery<IGetMoviesResult>(['movies', 'searchResults'], () =>
+    keyword ? fetchSearchMovies(keyword) : Promise.resolve(null)
   );
+  const {
+    isLoading: tvLoading,
+    data: tvData,
+    refetch: refetchTvs,
+  } = useQuery<IGetMoviesResult>(['tvs', 'searchResults'], () =>
+    keyword ? fetchSearchTvs(keyword) : Promise.resolve(null)
+  );
+  useEffect(() => {
+    refetchMovies();
+    refetchTvs();
+  }, [keyword]);
+
   const loading = movieLoading || tvLoading;
   return (
     <Wrap>
