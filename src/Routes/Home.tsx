@@ -1,6 +1,7 @@
 import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import { useQuery } from 'react-query';
 import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import {
   fetchNowPlayingMovie,
@@ -9,6 +10,7 @@ import {
   fetchUpcomingMovie,
   IGetMoviesResult,
 } from '../api';
+import { category } from '../atoms';
 import Slider from '../components/Slider';
 import { makeImagePath } from '../util';
 
@@ -109,6 +111,7 @@ const BigOverview = styled.p`
 function Home() {
   const history = useHistory();
   const { scrollY } = useScroll();
+  const categoryValue = useRecoilValue(category);
 
   const bigMovieMatch = useRouteMatch<{ movieId: string }>('/movies/:movieId');
 
@@ -199,7 +202,7 @@ function Home() {
                   exit={{ opacity: 0 }}
                 />
                 <BigMovie
-                  layoutId={clickedMovieId}
+                  layoutId={categoryValue + clickedMovieId}
                   style={{
                     top: scrollY.get() + 80,
                   }}

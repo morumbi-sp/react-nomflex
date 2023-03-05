@@ -24,3 +24,8 @@ export const slideCnt = selector({
     }
   },
 });
+
+export const category = atom({
+  key: 'category',
+  default: '',
+});

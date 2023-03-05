@@ -1,8 +1,10 @@
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { IGetMoviesResult } from '../api';
+import { category } from '../atoms';
 import { makeImagePath } from '../util';
 
 interface SliderProps {
@@ -118,6 +120,8 @@ const infoVariants: Variants = {
 function Slider({ apiData, pageName, categoryName }: SliderProps) {
   const history = useHistory();
 
+  const setCategory = useSetRecoilState(category);
+
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [isRevers, setIsRevers] = useState(false);
@@ -147,6 +151,7 @@ function Slider({ apiData, pageName, categoryName }: SliderProps) {
   const toggleLeaving = () => setLeaving((prev) => !prev);
 
   const onBoxClicked = (movieId: number) => {
+    setCategory(categoryName);
     history.push(`/${pageName}/${movieId}`);
   };
 
