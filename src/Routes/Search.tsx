@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, Variants } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useLocation } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -27,7 +27,7 @@ const CategoryName = styled.div`
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 100px;
+  padding: 50px;
 `;
 
 const Container = styled.div`
@@ -107,7 +107,7 @@ function Search() {
   useEffect(() => {
     refetchMovies();
     refetchTvs();
-  }, [keyword]);
+  }, [keyword, refetchMovies, refetchTvs]);
 
   const loading = movieLoading || tvLoading;
   return (

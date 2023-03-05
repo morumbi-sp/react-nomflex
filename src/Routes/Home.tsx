@@ -93,7 +93,7 @@ const BigCover = styled.div<{ bgphoto: string }>`
 const BigTitle = styled.h3`
   color: ${(props) => props.theme.white.lighter};
   text-align: center;
-  font-size: 50px;
+  font-size: 40px;
   position: relative;
   top: -60px;
 `;
@@ -109,6 +109,7 @@ const BigOverview = styled.p`
 function Home() {
   const history = useHistory();
   const { scrollY } = useScroll();
+
   const bigMovieMatch = useRouteMatch<{ movieId: string }>('/movies/:movieId');
 
   const { isLoading: nowPlayingMovieLoading, data: nowPlayingMovieData } =
@@ -123,13 +124,18 @@ function Home() {
   const { isLoading: upcomingMovieLoading, data: upcomingMovieData } =
     useQuery<IGetMoviesResult>(['movies', 'upcoming'], fetchUpcomingMovie);
 
+  const allData = [
+    ...(nowPlayingMovieData?.results ?? []),
+    ...(topLatedMovieData?.results ?? []),
+    ...(popularMovieData?.results ?? []),
+    ...(upcomingMovieData?.results ?? []),
+  ];
+
   const backDropImgIndex = 1;
   const clickedMovieId = bigMovieMatch?.params.movieId;
   const clickedMovieData =
     bigMovieMatch &&
-    nowPlayingMovieData?.results.find(
-      (movie) => movie.id === Number(clickedMovieId)
-    );
+    allData?.find((movie) => movie.id === Number(clickedMovieId));
 
   const loading =
     nowPlayingMovieLoading ||
@@ -195,7 +201,7 @@ function Home() {
                 <BigMovie
                   layoutId={clickedMovieId}
                   style={{
-                    top: scrollY.get() + 50,
+                    top: scrollY.get() + 80,
                   }}
                 >
                   <BigCover

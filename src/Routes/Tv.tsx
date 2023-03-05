@@ -92,7 +92,7 @@ const BigCover = styled.div<{ bgphoto: string }>`
 const BigTitle = styled.h3`
   color: ${(props) => props.theme.white.lighter};
   text-align: center;
-  font-size: 50px;
+  font-size: 40px;
   position: relative;
   top: -60px;
 `;
@@ -108,7 +108,7 @@ const BigOverview = styled.p`
 function Tv() {
   const history = useHistory();
   const { scrollY } = useScroll();
-  const bigMovieMatch = useRouteMatch<{ movieId: string }>('/tv/tvs/:tvId');
+  const bigMovieMatch = useRouteMatch<{ tvId: string }>('/tv/tvs/:tvId');
 
   const { isLoading: topLateTvLoading, data: topLateTvData } =
     useQuery<IGetMoviesResult>(['tvs', 'topLate'], fetchTopRatedTv);
@@ -117,11 +117,17 @@ function Tv() {
   const { isLoading: popularTvLoading, data: popularTvData } =
     useQuery<IGetMoviesResult>(['tvs', 'popular'], fetchPopularTv);
 
+  const allData = [
+    ...(topLateTvData?.results ?? []),
+    ...(airingTodayTvData?.results ?? []),
+    ...(popularTvData?.results ?? []),
+  ];
+
   const backDropImgIndex = 0;
-  const clickedMovieId = bigMovieMatch?.params.movieId;
+  const clickedMovieId = bigMovieMatch?.params.tvId;
   const clickedMovieData =
     bigMovieMatch &&
-    topLateTvData?.results.find((movie) => movie.id === Number(clickedMovieId));
+    allData?.find((movie) => movie.id === Number(clickedMovieId));
 
   const loading = topLateTvLoading || airingTodayTvLoading || popularTvLoading;
 
@@ -182,7 +188,7 @@ function Tv() {
                   <BigCover
                     bgphoto={makeImagePath(clickedMovieData?.backdrop_path!)}
                   />
-                  <BigTitle>{clickedMovieData?.title}</BigTitle>
+                  <BigTitle>{clickedMovieData?.name}</BigTitle>
                   <BigOverview>{clickedMovieData?.overview}</BigOverview>
                 </BigMovie>
               </>
