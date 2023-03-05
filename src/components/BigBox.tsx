@@ -84,14 +84,6 @@ function BigBox({ scrollY, page }: PropsI) {
     history.push(pageName);
   };
 
-  const getYear = (date: string) => {
-    if (date) {
-      return date.split('-')[0];
-    } else {
-      return '';
-    }
-  };
-
   return (
     <>
       <Overlay
