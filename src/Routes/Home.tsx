@@ -1,7 +1,7 @@
-import { motion, AnimatePresence, useScroll } from 'framer-motion';
+import { AnimatePresence, useScroll } from 'framer-motion';
 import { useQuery } from 'react-query';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import {
   fetchNowPlayingMovie,
@@ -9,9 +9,8 @@ import {
   fetchTopLatedMovie,
   fetchUpcomingMovie,
   IGetMoviesResult,
-  IMovie,
 } from '../api';
-import { allApiDataMovie, category } from '../atoms';
+import { allApiDataMovie } from '../atoms';
 import BigBox from '../components/BigBox';
 import Slider from '../components/Slider';
 import { makeImagePath } from '../util';
@@ -64,7 +63,6 @@ const SliderContainer = styled.div`
 `;
 
 function Home() {
-  const history = useHistory();
   const { scrollY } = useScroll();
   const scrollYGet = scrollY.get();
   const setAllData = useSetRecoilState(allApiDataMovie);
@@ -93,20 +91,12 @@ function Home() {
   setAllData(allData);
 
   const backDropImgIndex = 1;
-  const clickedMovieId = bigMovieMatch?.params.movieId;
-  const clickedMovieData =
-    bigMovieMatch &&
-    allData?.find((movie) => movie.id === Number(clickedMovieId));
 
   const loading =
     nowPlayingMovieLoading ||
     topLatedMovieLoading ||
     popularMovieLoading ||
     upcomingMovieLoading;
-
-  const onOutsideClicked = () => {
-    history.push(`/`);
-  };
 
   return (
     <Wrapper>

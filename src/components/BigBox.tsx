@@ -1,4 +1,4 @@
-import { motion, useScroll } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
