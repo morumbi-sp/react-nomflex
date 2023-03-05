@@ -10,7 +10,7 @@ import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-interface ISearch {
+interface IForm {
   keyword: string;
 }
 
@@ -103,7 +103,7 @@ const logoVariants: Variants = {
 function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const { scrollY } = useScroll();
-  const { register, handleSubmit } = useForm<ISearch>();
+  const { register, handleSubmit } = useForm<IForm>();
 
   const homeMatch = useRouteMatch('/');
   const tvMatch = useRouteMatch('/tv');
@@ -117,7 +117,7 @@ function Header() {
     ['rgba(0,0,0,0)', 'rgba(0,0,0,1)']
   );
 
-  const onValid = (data: ISearch) => {
+  const onValid = (data: IForm) => {
     history.push(`/search?keyword=${data.keyword}`);
   };
   const toggleSearch = () => {

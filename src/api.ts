@@ -1,5 +1,3 @@
-export const API_KEY = '5d058213508c42de1e97cd1ebdbe63f3';
-
 export interface IMovie {
   adult: boolean;
   backdrop_path: string;
@@ -27,6 +25,8 @@ export interface IGetMoviesResult {
 }
 
 const BASE_MOVIE_URL = 'https://api.themoviedb.org/3';
+
+const API_KEY = '5d058213508c42de1e97cd1ebdbe63f3';
 
 export const fetchNowPlayingMovie = async () => {
   const response = await fetch(
@@ -75,6 +75,20 @@ export const fetchAiringTodayTv = async () => {
 export const fetchPopularTv = async () => {
   const response = await fetch(
     `${BASE_MOVIE_URL}/tv/popular?api_key=${API_KEY}&language=ko&page=1`
+  );
+  const json = await response.json();
+  return json;
+};
+export const fetchSearchMovies = async (keyword: string) => {
+  const response = await fetch(
+    `${BASE_MOVIE_URL}/search/movie?api_key=${API_KEY}&language=ko&query=${keyword}&page=1&include_adult=false`
+  );
+  const json = await response.json();
+  return json;
+};
+export const fetchSearchTvs = async (keyword: string) => {
+  const response = await fetch(
+    `${BASE_MOVIE_URL}/search/tv?api_key=${API_KEY}&language=ko&query=${keyword}&page=1&include_adult=false`
   );
   const json = await response.json();
   return json;
